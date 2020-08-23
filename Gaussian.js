@@ -32,9 +32,9 @@ function generateKernel(){
 
 function convulation(){
     var sum = 0;
-    for(i=0;i<img.width - img.width%3;i++){
-        for(j=0;j<img.height - img.height%3;j++){
-            
+    for(var i=0;i<img.width - img.width%3;i++){
+        for(var j=0;j<img.height - img.height%3;j++){
+           
         }
     }
 }
