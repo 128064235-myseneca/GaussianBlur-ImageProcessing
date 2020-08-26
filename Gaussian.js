@@ -1,16 +1,7 @@
-var kernel1=[];
-var kernel2=[[1,1,1],[1,1,1],[1,1,1]];
-var img;
-var imgData;
-var canvas1;
-var canvas2;
-var canvas3;
-var ctx1;
-var ctx2;
-var ctx3;
-var gaussData;
-var meanData;
-var kernelSum = 0.0;
+    var kernelSum = 0.0;
+    var imgData;
+
+    var img;
 
 
 function gaussianDestribution(mean, sigma, x, y){
@@ -18,8 +9,8 @@ function gaussianDestribution(mean, sigma, x, y){
     return(num)
 }
 
-function generateKernel(){
-
+function generateKernel(kernel){
+    
     var mean = 0;
     var sigma = 0.9;
     
@@ -32,9 +23,10 @@ function generateKernel(){
                 temp.push(gaussianDestribution(mean, sigma, x,y));   
                 kernelSum += gaussianDestribution(mean, sigma, x,y);
             }
-        kernel1.push(temp);
+        kernel.push(temp);
         temp = [];
-    }   
+    }
+    return(kernel);
 }
 
 function convulation(kernel,sum){
@@ -72,18 +64,32 @@ function convulation(kernel,sum){
 
 
 
-function gaussianBlur(){
-    generateKernel();
-    gaussData = convulation(kernel1,kernelSum);
-
+function gaussianBlur(kernel){
+    var gaussData;
+    kernel = generateKernel(kernel);
+    gaussData = convulation(kernel,kernelSum);
+    
+    return(gaussData);
     
 }
-function meanBlur(){
-        meanData = convulation(kernel2,9);
+function meanBlur(kernel){
+    var meanData;
+        meanData = convulation(kernel,9);
+    return(meanData);
 }
 
 
 function draw() {
+    var kernel1=[];
+    var kernel2=[[1,1,1],[1,1,1],[1,1,1]];
+    var canvas1;
+    var canvas2;
+    var canvas3;
+    var ctx1;
+    var ctx2;
+    var ctx3;
+    var gaussData;
+    var meanData;
     canvas1 = document.getElementById('myCanvas1');
     canvas2 = document.getElementById('myCanvas2');
     canvas3 = document.getElementById('myCanvas3');
@@ -91,6 +97,7 @@ function draw() {
     ctx2 = canvas2.getContext('2d');
     ctx3 = canvas3.getContext('2d');
     img = new Image();
+    
     img.onload = function() {
         canvas1.height = img.height;
         canvas1.width = img.width;
@@ -99,10 +106,14 @@ function draw() {
         canvas3.height = img.height;
         canvas3.width = img.width;
         ctx1.drawImage(img, 0, 0);
+        
         imgData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
 //        testData = imgData;
-        gaussianBlur();
-        meanBlur();
+        
+        gaussData=gaussianBlur(kernel1);
+        
+        meanData =meanBlur(kernel2);
+        
         ctx2.putImageData(gaussData,0,0);
         ctx3.putImageData(meanData,0,0);
 //        console.log(ctx);
